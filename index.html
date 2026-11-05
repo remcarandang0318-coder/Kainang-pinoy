@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KAINAN PINOY - Salmiya Kuwait</title>
+<style>
+body{margin:0;font-family:Arial;background:#f7f7f5;padding-bottom:110px}
+.top{background:#fff;padding:16px;text-align:center}
+h1{font-size:28px;margin:5px 0 0}.sub{font-weight:700}.loc{color:#666;font-size:13px}
+.pills{display:flex;gap:8px;justify-content:center;margin:10px 0;flex-wrap:wrap}
+.pill{font-size:12px;font-weight:800;padding:7px 10px;border-radius:999px}
+.green{background:#0f7a4a;color:#fff}.yellow{background:#ffcf3f}
+.wrap{max-width:560px;margin:0 auto;padding:12px}
+.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:10px}
+.tab{white-space:nowrap;border:1px solid #ddd;background:#fff;padding:8px 14px;border-radius:999px;font-weight:700;font-size:13px;cursor:pointer}
+.tab.active{background:#ff9d1b;color:#fff;border-color:#ff9d1b}
+.card{background:#fff;border-radius:14px;padding:10px;display:flex;gap:12px;margin-bottom:10px;align-items:center}
+.card img{width:80px;height:80px;object-fit:cover;border-radius:10px}
+.price{font-weight:800}
+.add{margin-left:auto;background:#fff;border:2px solid #0f9d58;color:#0f9d58;font-weight:800;padding:8px 13px;border-radius:10px;cursor:pointer}
+.cartbar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;padding:10px 12px;max-width:560px;margin:0 auto}
+.wa{background:#0f9d58;color:#fff;border:none;width:100%;padding:13px;border-radius:12px;font-weight:800;font-size:16px;margin-top:8px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>KAINAN PINOY</h1><div class="sub">Sarap ng Lutong Pinoy</div>
+<div class="loc">📍 Salmiya • Kuwait | WhatsApp +965 6624 6562</div>
+<div class="pills"><span class="pill green">DIRECT ORDER • NO COMMISSION</span><span class="pill yellow">🛵 FREE DELIVERY • Minimum 8-10 KD</span></div>
+</div>
+<div class="wrap"><div class="tabs" id="tabs"></div><div id="count" style="text-align:center;color:#666;font-size:13px;margin-bottom:10px"></div><div id="menu"></div></div>
+<div class="cartbar"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px"><span id="ctext">0.000 KD</span><span id="need"></span></div><button class="wa" onclick="order()">🟢 ORDER NOW via WhatsApp — <span id="total">0.000 KD</span></button></div>
+<script>
+const PICS={
+"Sinigang":"https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400",
+"Gulay":"https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400",
+"Inihaw":"https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400",
+"Sizzling":"https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=400",
+"Silog":"https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400",
+"Lomi":"https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400",
+"Pancit":"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400",
+"Street Food":"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400"
+};
+const items=[
+{c:"Sinigang",n:"Sinigang Tilapia",p:3.75},{c:"Sinigang",n:"Chicken Sinigang",p:3.5},{c:"Sinigang",n:"Beef Kare Kare",p:3.75},{c:"Sinigang",n:"Sinigang Hipon",p:3.75},{c:"Sinigang",n:"Chicken Tinola",p:3.5},{c:"Sinigang",n:"Beef Humba",p:3.75},{c:"Sinigang",n:"Sinigang Bangus",p:3.75},{c:"Sinigang",n:"Beef Sinigang",p:3.95},{c:"Sinigang",n:"Ginisang Mongo",p:2.5},{c:"Sinigang",n:"Beef Bulalo",p:3.95},{c:"Sinigang",n:"Beef Papaitan",p:2},{c:"Sinigang",n:"Diningdeng",p:2.5},
+{c:"Gulay",n:"Ginataang Sitaw at Kalabasa Crabs",p:2.5},{c:"Gulay",n:"Ginisang Sigarilyas",p:2.5},{c:"Gulay",n:"Ginisang Ampalaya",p:2.5},{c:"Gulay",n:"Ginataang Sitaw at Kalabasa Hipon",p:2.5},{c:"Gulay",n:"Ginisang Sayote",p:2.5},{c:"Gulay",n:"Chopsuey",p:2.5},{c:"Gulay",n:"Ginataang Langka",p:2.5},{c:"Gulay",n:"Ginisang Toque",p:2.5},{c:"Gulay",n:"Ginisang Sigarilyas Shrimp",p:2.5},{c:"Gulay",n:"Chicken Pinakbet",p:2.5},{c:"Gulay",n:"Adobong Sitaw",p:2.5},{c:"Gulay",n:"Ginisang Baguio Beans",p:2.5},
+{c:"Inihaw",n:"Daing Bangus",p:3.75},{c:"Inihaw",n:"Paksiw Bangus",p:3.75},{c:"Inihaw",n:"Chicken BBQ",p:1.75},{c:"Inihaw",n:"Sizzling Bangus",p:3.75},{c:"Inihaw",n:"Adobong Bangus",p:3.75},{c:"Inihaw",n:"Adobong Pusit",p:2.75},{c:"Inihaw",n:"Inihaw Tilapia",p:3.75},{c:"Inihaw",n:"Fried Tilapia",p:3.5},{c:"Inihaw",n:"Ginataang Tilapia",p:3.75},{c:"Inihaw",n:"Inihaw Bangus",p:3.75},{c:"Inihaw",n:"Inihaw Pusit",p:2.75},{c:"Inihaw",n:"Paksiw Tilapia",p:3.75},
+{c:"Sizzling",n:"Sizzling Chicken",p:3.25},{c:"Sizzling",n:"Chicken Caldereta",p:3.5},{c:"Sizzling",n:"Chicken Bicol Express",p:3.25},{c:"Sizzling",n:"Sizzling Beef",p:3.5},{c:"Sizzling",n:"Beef Caldereta",p:3.75},{c:"Sizzling",n:"Beef Bicol Express",p:3.5},{c:"Sizzling",n:"Butter Shrimp",p:3.75},{c:"Sizzling",n:"Bistek Tagalog",p:3},{c:"Sizzling",n:"Beef Curry",p:3},{c:"Sizzling",n:"Sizzling Tofu",p:3},{c:"Sizzling",n:"Chicken Adobo",p:3},{c:"Sizzling",n:"Chicken Curry",p:2.5},
+{c:"Silog",n:"Skinless Silog",p:1.5},{c:"Silog",n:"Paksiw Tulingan",p:1.5},{c:"Silog",n:"Tortang Talong",p:1.5},{c:"Silog",n:"Tapsilog",p:1.5},{c:"Silog",n:"Bangsilog",p:1.5},{c:"Silog",n:"Braised Beef",p:1.5},{c:"Silog",n:"Tocilog",p:1.5},{c:"Silog",n:"Chicken Adobo Silog",p:1.5},{c:"Silog",n:"Mongolian Beef",p:1.5},{c:"Silog",n:"Sisiglog",p:1.5},{c:"Silog",n:"Bistek Tagalog Silog",p:1.5},{c:"Silog",n:"Chicken Salpicao",p:1.5},
+{c:"Lomi",n:"Lomi Single",p:1.75},{c:"Lomi",n:"Goto Single",p:1.75},{c:"Lomi",n:"Batchoy",p:1.5},{c:"Lomi",n:"Hotsilog",p:1.5},{c:"Lomi",n:"Arozcaldo",p:1.5},{c:"Lomi",n:"Mami",p:1.5},{c:"Lomi",n:"Tuyo Silog",p:1.5},{c:"Lomi",n:"Lomi Overload",p:4.5},{c:"Lomi",n:"Goto Overload",p:4.5},{c:"Lomi",n:"Spam Silog",p:1.5},{c:"Lomi",n:"Lomi Duel",p:2.75},{c:"Lomi",n:"Goto Duel",p:2.75},
+{c:"Pancit",n:"Bangus Sweet & Sour",p:3.75},{c:"Pancit",n:"Bangus Steak",p:3.75},{c:"Pancit",n:"Palabok",p:2.5},{c:"Pancit",n:"Seafood Kare-Kare",p:3.75},{c:"Pancit",n:"Paksiw na Macarel",p:2.5},{c:"Pancit",n:"Pancit Mix",p:2.5},{c:"Pancit",n:"Tilapia Sweet & Sour",p:3.75},{c:"Pancit",n:"Chicken Caldereta Pancit",p:3.5},{c:"Pancit",n:"Pancit Bihon",p:2.5},{c:"Pancit",n:"Shrimp Kare-Kare",p:3.5},{c:"Pancit",n:"Chicken Afritada",p:3.5},{c:"Pancit",n:"Pancit Canton",p:2.5},
+{c:"Street Food",n:"Squidball",p:1.5},{c:"Street Food",n:"Mix Squid / Kikiam",p:1.5},{c:"Street Food",n:"Takoyaki 24pcs",p:4.5},{c:"Street Food",n:"Fried Shomia",p:1.5},{c:"Street Food",n:"Kikiam",p:1.5},{c:"Street Food",n:"Takoyaki 12pcs",p:2.5},{c:"Street Food",n:"Chicken Shanghai",p:1.5},{c:"Street Food",n:"Tokneneng",p:1.5},{c:"Street Food",n:"Takoyaki 6pcs",p:2},{c:"Street Food",n:"Vegetable Shanghai",p:1.5},{c:"Street Food",n:"Shrimp Tempura",p:3.5},{c:"Street Food",n:"Fried Tofu",p:2.5}
+];
+let cats=["All","Sinigang","Gulay","Inihaw","Sizzling","Silog","Lomi","Pancit","Street Food"];
+let cur="All"; let cart={};
+function renderTabs(){document.getElementById('tabs').innerHTML=cats.map(c=>`<button class="tab ${c===cur?'active':''}" onclick="setCat('${c}')">${c}</button>`).join('');}
+function setCat(c){cur=c;renderTabs();render();}
+function render(){
+ let list=items.filter(it=>cur==="All"||it.c===cur);
+ document.getElementById('count').innerText=list.length+" items • 96 items total";
+ document.getElementById('menu').innerHTML=list.map(it=>{
+   let idx=items.indexOf(it);
+   return `<div class="card"><img src="${PICS[it.c]}"><div><h3 style="margin:0;font-size:15px">${it.n}</h3><div style="font-size:12px;color:#888">${it.c}</div><div class="price">${it.p.toFixed(3)} KD</div></div><button class="add" onclick="add(${idx})">+ ADD</button></div>`;
+ }).join('');
+}
+function add(i){cart[i]=(cart[i]||0)+1;update();}
+function update(){
+ let total=Object.keys(cart).reduce((s,k)=>s+items[k].p*cart[k],0);
+ document.getElementById('total').innerText=total.toFixed(3)+' KD';
+ document.getElementById('ctext').innerText=total.toFixed(3)+' KD';
+ document.getElementById('need').innerText=total>=8?'✅ FREE DELIVERY!':'Add '+(8-total).toFixed(3)+' KD for FREE';
+}
+function order(){
+ let msg='Hello KAINAN PINOY! New Order:%0A';
+ Object.keys(cart).forEach(k=>{msg+=`${cart[k]}x ${items[k].n} - ${(items[k].p*cart[k]).toFixed(3)} KD%0A`;});
+ window.open('https://wa.me/96566246562?text='+msg,'_blank');
+}
+renderTabs();render();update();
+</script>
+</body>
+</html>
